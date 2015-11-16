@@ -1,0 +1,8 @@
+New log file opened at Mon Oct 19 23:41:04 EDT 2015 by 24068@v1020-wn-195-4.campus-dynamic.uwaterloo.ca
+Taking next connection to: 42763
+Checking to see if clients are empty...
+No non-daemon clients connected after 3 min. Shutting down.
+Server socket thread exiting.
+0 clients open, will close them...
+All client sockets have been closed.
+Closing the 24068@v1020-wn-195-4.campus-dynamic.uwaterloo.ca logs at Mon Oct 19 23:44:04 EDT 2015, goodbye.

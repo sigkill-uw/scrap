@@ -1,0 +1,87 @@
+These are the commands defined in the JSON-based scrap chat protocol. It's very
+loosely inspired by the IRC protocol. Most of these commands have two distinct
+forms, representing a query from a client and a response from a server. The same
+command identifier is used in either case. All commands are of the form
+{command: string, ...}, so I've ommitted that parameter below. Furthermore,
+every server response also contains a numerical field `time` representing the
+current server time as a Unix timestamp - this also has been ommitted. Commands
+are case-insensitive by command identifier.
+
+Some general protocol info:
+	- An identifier is a sequence of any alphanumeric ASCII characters or the
+characters '-' and '_', of length at most 20, possibility prepended with '#' or
+'!'
+	- Identifiers starting with `#` are rooms. Identifiers starting with `!` are
+system "nicknames", reserved for the server and for the internals of the client.
+All other identifiers are taken to be user identifiers (nicknames)
+	- Identifiers are case-insensitive - "adam" and "ADAM" are the same person;
+"#foo" and "#foO" are the same room
+
+NICK
+	Sent immediately after connecting. A request by the client for a given
+nickname. Must be sent (and successfully evaluted) before any other commands
+will be considered by the server (excluding misc. info commands). If the given
+nickname is unregistered on the server, the password field is ignored.
+
+	From the client: {nick: string, password: string}
+	From the server: {nick: string, success: boolean, message: string}
+
+
+REGISTER
+	Sent after a successful NICK. Registers the currently-in-use nickname of a
+given user, using the supplied password. This changes the password for an
+already-registered user.
+
+	From the client: {password: string}
+	From the server: {success: boolean, message: string}
+
+
+ENTER
+	From the client, a request to join a given chtroom. From the server, indicates
+that someone has joined a chatroom that you are currently in. There's no
+success/failure indicator, because (on success) you yourself will receive an
+ENTER command indicating that you have joined. Any error information will be
+conveyed via EMESSAGE.
+
+	From the client: {room: string}
+	From the server: {nick: string, room: string, users: array of string}
+
+
+LEAVE
+	Analogous to ENTER.
+
+	From the client: {room: string}
+	From the server: {nick: string, room: string, users: array of string}
+
+
+MESSAGE
+	Speech. From the client side, if `recipient` is a channel identifier, the
+message will be broadcast over the channel (contingent on the user being in said
+channel). If the client sends a message to a user, the message will be routed to
+that user only. From the server, `recipient` will indicate whether the message
+was to a room, or to you personally. `sender` will either be another user or a
+system ("!") nickname.
+
+	From the client: {recipient: string, content: string}
+	From the server: {sender: string, recipient: string, content: string}
+
+
+EMESSAGE
+	Identical in implementation to MESSAGE, but only valid from the server and with
+a different semantic significance. EMESSAGE indicates general error messages.
+`sender` will almost certainly be a system nickname.
+
+
+MOTD
+	Requests the current message of the day from the server. The only real failure
+case is if the MOTD file doesn't exist or isn't readable, so in that case the
+motd response field would just be "".
+
+	From the client: {}
+	From the server: {motd: string}
+
+
+QUIT
+	From the client, indicates a desire to close the connection.
+
+	From the client: {}

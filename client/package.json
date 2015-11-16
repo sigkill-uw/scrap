@@ -1,0 +1,19 @@
+{
+	"name": "scrap",
+	"version": "1.0.0",
+	"description": "Client for scrap chat service",
+	"keywords": [
+		"chat",
+		"client"
+	],
+	"author": "Adam `sigkill` Richardson",
+	"license": "MIT",
+	"devDependencies": {
+		"grunt": "^0.4.5",
+		"grunt-contrib-copy": "^0.8.1",
+		"grunt-contrib-cssmin": "^0.14.0",
+		"grunt-contrib-htmlmin": "^0.5.0",
+		"grunt-contrib-uglify": "^0.5.0",
+		"grunt-contrib-watch": "^0.6.1"
+	}
+}
